@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import zc.buildout
 import zc.recipe.egg
+import os.path
 
 
 class Recipe:
@@ -17,7 +18,8 @@ class Recipe:
         if self.src_absolute_path in external_deps_paths:
             external_deps_paths.remove(self.src_absolute_path)
 
-        with open('.project', 'w') as f:
+        project_path = os.path.join("src", self.options["src"], ".project")
+        with open(project_path, 'w') as f:
             f.writelines('''<?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
     <name>%(name)s</name>
@@ -36,11 +38,12 @@ class Recipe:
     </natures>
 </projectDescription>''' % self.options)
 
-        with open('.pydevproject', 'w') as f:
+        pydevproject_path = os.path.join("src", self.options["src"], ".pydevproject")
+        with open(pydevproject_path, 'w') as f:
             f.writelines('''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?eclipse-pydev version="1.0"?><pydev_project>
 <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
-<path>/%(name)s/%(src)s</path>
+<path>%(src)s</path>
 </pydev_pathproperty>
 <pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">%(python_version)s</pydev_property>
 <pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">%(python_interpreter)s</pydev_property>
